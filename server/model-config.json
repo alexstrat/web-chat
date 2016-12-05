@@ -28,5 +28,17 @@
   "Role": {
     "dataSource": "db",
     "public": false
+  },
+  "WebChatUser": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Room": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Message": {
+    "dataSource": "db",
+    "public": true
   }
 }
