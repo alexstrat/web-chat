@@ -4,7 +4,9 @@
   "version": "0.0.1",
   "main": "server/server.js",
   "scripts": {
-    "start": "node ."
+    "postinstall": "cd client && npm install",
+    "tsc": "cd client && npm run tsc",
+    "start": "npm run tsc && node ."
   },
   "dependencies": {
     "compression": "^1.0.3",
