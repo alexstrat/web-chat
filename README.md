@@ -14,6 +14,13 @@ npm install
 
 To start the server, run this command in project root:
 
-```npm start```
+```
+npm start
+```
 
 Then you can access your app at `http://0.0.0.0/3000`.
+
+
+## Live
+
+App is live at `https://tibtib-web-chat.herokuapp.com/`
