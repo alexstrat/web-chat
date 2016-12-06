@@ -11,12 +11,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var AppComponent = (function () {
     function AppComponent() {
-        this.name = 'Angular';
+        this.setIsLoggedIn();
     }
+    AppComponent.prototype.setIsLoggedIn = function () {
+        var user = localStorage.getItem('user');
+        this.isLoggedIn = user != null;
+        if (user)
+            this.user = JSON.parse(user);
+    };
+    AppComponent.prototype.onLogin = function () {
+        this.setIsLoggedIn();
+    };
     AppComponent = __decorate([
         core_1.Component({
-            selector: 'my-app',
-            template: "<h1>Hello {{name}}</h1>",
+            selector: 'web-chat-app',
+            template: "\n  <h1>ChatX</h1>\n  <login *ngIf=\"!isLoggedIn\" (login)=\"onLogin()\"></login>\n  <chat *ngIf=\"isLoggedIn\" [user]=\"user\"></chat>\n  "
         }), 
         __metadata('design:paramtypes', [])
     ], AppComponent);
