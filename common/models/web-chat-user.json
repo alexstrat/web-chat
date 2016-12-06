@@ -6,7 +6,7 @@
     "validateUpsert": true
   },
   "properties": {
-    "pseudo": {
+    "nickname": {
       "type": "string",
       "required": true
     },

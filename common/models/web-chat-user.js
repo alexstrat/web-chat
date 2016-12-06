@@ -1,5 +1,5 @@
 'use strict';
 
-module.exports = (Webchatuser) => {
+module.exports = (WebChatUser) => {
 
 };

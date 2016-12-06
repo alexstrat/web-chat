@@ -26,5 +26,21 @@ boot(app, __dirname, (err) => {
   // start the server if `$ node server.js`
   if (require.main === module) {
     app.io = require('socket.io')(app.start());
+    app.io.on('connection', (socket) => {
+      console.log('user connected');
+
+      socket.on('disconnect', () => {
+       console.log('user disconnected');
+      });
+
+      socket.on('list', (data) => {
+        if (data) {
+          app.models.Message.find({where: {roomId: data.roomId}, include: {relation: 'user'}})
+          .then((messages) => {
+            messages.forEach((message) => { socket.emit(`message-${data.roomId}`, message)});
+          });
+        }
+      });
+    });
   }
 });
