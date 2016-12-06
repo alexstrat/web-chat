@@ -4,7 +4,7 @@ import {Headers, Http} from "@angular/http";
 import * as io from "socket.io-client";
 
 @Injectable()
-export class ChatService {
+export class SocketService {
     private socketUrl: string = 'http://0.0.0.0:3000';
     private messageAPIEndpoint: string = `${this.socketUrl}/api/Messages`;
     private headers = new Headers({'Content-Type': 'application/json'});

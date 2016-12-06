@@ -1,4 +1,4 @@
-import {ChatService} from './chat.service';
+import {SocketService} from './socket.service';
 import {RoomService} from './room.service';
 import {Component, Input} from '@angular/core';
 
@@ -44,7 +44,7 @@ import {Component, Input} from '@angular/core';
           </div>
         </div>
     `,
-    providers: [ChatService, RoomService]
+    providers: [SocketService, RoomService]
 })
 export class Chat {
     private messages: any[] = new Array();
@@ -54,7 +54,7 @@ export class Chat {
     roomName: string;
     @Input() user: any;
 
-    constructor(private roomService: RoomService, private chatService: ChatService) {}
+    constructor(private roomService: RoomService, private socketService: SocketService) {}
 
     sendMessage() {
       const message = {
@@ -62,13 +62,13 @@ export class Chat {
         userId: this.user.id,
         roomId: this.roomId
       };
-      this.chatService.sendMessage(message);
+      this.socketService.sendMessage(message);
     }
 
     initChatRoom(roomId: number) {
       this.roomId = roomId;
-      this.chatService.joinRoom(this.roomId, this.user.nickname);
-      this.chatService
+      this.socketService.joinRoom(this.roomId, this.user.nickname);
+      this.socketService
         .getMessages(this.roomId)
         .subscribe(message => {
           if(message) {
@@ -77,7 +77,7 @@ export class Chat {
               this.messages.shift();
           }
         });
-      this.chatService
+      this.socketService
         .getRoomUsers(this.roomId)
         .subscribe(userEvent => {
           if(userEvent.action === 'create') {
