@@ -23,4 +23,4 @@ Then you can access your app at `http://0.0.0.0/3000`.
 
 ## Live
 
-App is live at `https://tibtib-web-chat.herokuapp.com/`
+App is live at [https://tibtib-web-chat.herokuapp.com/](https://tibtib-web-chat.herokuapp.com/)
