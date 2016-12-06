@@ -1,0 +1,4 @@
+- Improve app build system to improve loading time
+- Separate components into smaller ones and better organize client (use more ng modules for instance)
+- Add tests!
+- Add ACLs and security on backend
