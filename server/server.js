@@ -25,19 +25,45 @@ boot(app, __dirname, (err) => {
 
   // start the server if `$ node server.js`
   if (require.main === module) {
+    let rooms = {};
     app.io = require('socket.io')(app.start());
     app.io.on('connection', (socket) => {
       console.log('user connected');
 
       socket.on('disconnect', () => {
-       console.log('user disconnected');
+        for(let roomId in rooms) {
+          if (rooms[roomId][socket.nickname]) {
+            delete rooms[roomId][socket.nickname];
+            app.io.to(roomId).emit('user-deleted', socket.nickname);
+          }
+        }
+      });
+
+      socket.on('joinRoom', (data) => {
+        socket.nickname = data.nickname;
+        socket.join(data.roomId);
+        if (!rooms[data.roomId])
+          rooms[data.roomId] = {};
+        rooms[data.roomId][data.nickname] = true;
+        app.io.to(data.roomId).emit('user', data.nickname);
+      })
+
+      socket.on('roomUsersList', (data) => {
+        if (data) {
+          const clients = rooms[data.roomId];
+          for (let client in clients) {
+            if (client !== socket.nickname) {
+              socket.emit('user', client);
+            }
+          }
+        }
       });
 
       socket.on('list', (data) => {
         if (data) {
           app.models.Message.find({where: {roomId: data.roomId}, include: {relation: 'user'}})
           .then((messages) => {
-            messages.forEach((message) => { socket.emit(`message-${data.roomId}`, message)});
+            messages.forEach((message) => { socket.emit('message', message)});
           });
         }
       });

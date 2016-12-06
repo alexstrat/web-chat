@@ -12,16 +12,15 @@ export class ChatService {
 
     constructor(private http: Http) {
       this.socket = io.connect(this.socketUrl);
-      this.socket.on("error", (error: string) => {
+      this.socket.on('error', (error: string) => {
         console.error(`An error occured: ${error}`);
       });
     }
 
     getMessages(roomId: number): Observable<any> {
-      console.log('liiiiiiist', roomId);
-      this.socket.emit("list", {roomId: roomId});
+      this.socket.emit('list', {roomId: roomId});
       return Observable.create((observer: any) => {
-        this.socket.on(`message-${roomId}`, (message: any) => observer.next(message));
+        this.socket.on('message', (message: any) => observer.next(message));
         return () => this.socket.close();
       });
     }
@@ -30,5 +29,18 @@ export class ChatService {
       return this.http
         .post(`${this.messageAPIEndpoint}/send-message`, JSON.stringify(message), {headers: this.headers})
         .toPromise()
+    }
+
+    joinRoom(roomId: number, nickname: string) {
+      this.socket.emit('joinRoom', {roomId: roomId, nickname: nickname});
+    }
+
+    getRoomUsers(roomId: number): Observable<any> {
+      this.socket.emit('roomUsersList', {roomId: roomId});
+      return Observable.create((observer: any) => {
+        this.socket.on('user', (user: any) => observer.next({action: 'create', user: user}));
+        this.socket.on('user-deleted', (user: any) => observer.next({action: 'delete', user: user}));
+        return () => this.socket.close();
+      });
     }
 }

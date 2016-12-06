@@ -6,30 +6,16 @@ import {Component, Input} from '@angular/core';
     selector: 'chat',
     styles: [`
       .messages {
-        border-radius: 5px;
-        background: #f0f0f5;
-        border: solid 1px #b3b3cc;
-        height: 450px;
-        margin: 10px 0;
-        overflow: scroll;
+        display: flex; flex-direction: column;border-radius: 5px; background: #f0f0f5;
+        border: solid 1px #b3b3cc; height: 450px; margin: 10px 0;  overflow: scroll;
       }
-
       .message {
-        background: white;
-        border-radius: 5px;
-        border: solid 1px #b3b3cc;
-        padding: 10px;
-        margin: 5px;
-        width: 50%;
+        background: white; border-radius: 5px; border: solid 1px #b3b3cc;
+        padding: 10px; margin: 5px; width: 50%;
       }
-
-      .author {
-        font-style: italic;
-      }
-
-      .time {
-        font-size: 12px;
-      }
+      .author { font-style: italic; }
+      .time { font-size: 12px; }
+      .my-message { align-self: flex-end; background: #A8EB7D}
     `],
     template: `
         <h2>Bienvenue {{user.nickname}}</h2>
@@ -41,9 +27,9 @@ import {Component, Input} from '@angular/core';
           <button (click)="findOrCreateRoom()">Créer ou rejoindre la room</button>
         </div>
         <div *ngIf="roomId">
-          <div> Chatteurs présents : </div>
+          <div>Room {{roomName}}, Chatteurs présents : {{roomUsers}}</div>
           <div class="messages" *ngIf="messages">
-              <div class="message" *ngFor="let message of messages">
+              <div class="message" *ngFor="let message of messages" [ngClass]="{'my-message': message.user.nickname === user.nickname}">
                 <span class="author" *ngIf="message.user"> {{ message.user.nickname }} : </span>
                 <span> {{ message.content }} </span>
                 <div class="time"> {{ message.date | date:'hh:mm:ss'}}</div>
@@ -62,6 +48,7 @@ import {Component, Input} from '@angular/core';
 })
 export class Chat {
     private messages: any[] = new Array();
+    private roomUsers: string[] = new Array();
     message: string;
     roomId: number;
     roomName: string;
@@ -78,8 +65,9 @@ export class Chat {
       this.chatService.sendMessage(message);
     }
 
-    initChat(roomId: number) {
+    initChatRoom(roomId: number) {
       this.roomId = roomId;
+      this.chatService.joinRoom(this.roomId, this.user.nickname);
       this.chatService
         .getMessages(this.roomId)
         .subscribe(message => {
@@ -89,17 +77,28 @@ export class Chat {
               this.messages.shift();
           }
         });
+      this.chatService
+        .getRoomUsers(this.roomId)
+        .subscribe(userEvent => {
+          if(userEvent.action === 'create') {
+            this.roomUsers.push(userEvent.user);
+          }
+          else {
+            let index = this.roomUsers.findIndex(user => user === userEvent.user);
+            this.roomUsers.splice(index, index);
+          }
+        });
     }
 
     findOrCreateRoom() {
       this.roomService.findRoom(this.roomName)
       .then( room => {
-        this.initChat(room.json().id);
+        this.initChatRoom(room.json().id);
       })
       .catch(() => {
         this.roomService.createRoom(this.roomName, this.user.id)
         .then( room => {
-          this.initChat(room.json().id);
+          this.initChatRoom(room.json().id);
         });
       })
     }

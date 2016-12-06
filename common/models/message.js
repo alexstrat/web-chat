@@ -4,7 +4,8 @@ module.exports = (Message) => {
   Message.sendMessage = (message, next) => {
     Message.create(message, (error, message) => {
       Message.findById(message.id, {include: {relation: 'user'}}, (error, foundMessage) => {
-        Message.app.io.emit(`message-${foundMessage.roomId}`, foundMessage);
+        // send the message to the corresponding room channel
+        Message.app.io.to(foundMessage.roomId).emit('message', foundMessage);
         next();
       });
     });
