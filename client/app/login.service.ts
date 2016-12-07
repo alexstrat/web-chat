@@ -3,7 +3,7 @@ import {Headers, Http} from "@angular/http";
 
 @Injectable()
 export class LoginService {
-    userAPIEndpoint: string = 'http://0.0.0.0:3000/api/WebChatUsers'
+    userAPIEndpoint: string = `${window.location.href}api/WebChatUsers`
     private headers = new Headers({'Content-Type': 'application/json'});
 
     constructor(private http: Http) {}

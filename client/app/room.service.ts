@@ -3,7 +3,7 @@ import {Headers, Http} from "@angular/http";
 
 @Injectable()
 export class RoomService {
-    roomAPIEndpoint: string = 'http://0.0.0.0:3000/api/Rooms'
+    roomAPIEndpoint: string = `${window.location.href}api/Rooms`
     private headers = new Headers({'Content-Type': 'application/json'});
 
     constructor(private http: Http) {}

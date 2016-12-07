@@ -2,6 +2,10 @@
 
 This is the repository for a web chat project with Loopback & Angular 2.
 
+## Prerequisites
+
+Node >= 5.8.0
+
 ## Install project (tested on Mac OS X)
 
 Run the following commands

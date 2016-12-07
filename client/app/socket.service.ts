@@ -5,8 +5,8 @@ import * as io from "socket.io-client";
 
 @Injectable()
 export class SocketService {
-    private socketUrl: string = 'http://0.0.0.0:3000';
-    private messageAPIEndpoint: string = `${this.socketUrl}/api/Messages`;
+    private socketUrl: string = window.location.href;
+    private messageAPIEndpoint: string = `${this.socketUrl}api/Messages`;
     private headers = new Headers({'Content-Type': 'application/json'});
     socket: SocketIOClient.Socket;
 
